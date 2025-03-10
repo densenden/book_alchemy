@@ -1,16 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  </head>
-  <body>
+    <title>Library Home</title>
+    <style>
+        .book {
+            margin: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .cover {
+            width: 100px;
+            height: auto;
+        }
+        .info {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Library Books</h1>
 
     {% for book in books %}
-    <div> <h3>{{ book.title }}</h3>
-    </div>
+        <div class="book">
+            <img src="{{ book.cover_url }}" alt="Cover of {{ book.title }}" class="cover">
+            <div class="info">
+                <h2>{{ book.title }}</h2>
+                <p>By {{ book.author }}</p>
+            </div>
+        </div>
     {% endfor %}
 
-  </body>
+    <div>
+        <p><a href="{{ url_for('add_book') }}">Add New Book</a></p>
+        <p><a href="{{ url_for('add_author') }}">Add New Author</a></p>
+    </div>
+</body>
 </html>
