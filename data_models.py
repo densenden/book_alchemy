@@ -29,6 +29,3 @@ class Book(db.Model):
     def __str__(self):
         return f"Book: {self.title}, ISBN: {self.isbn}, Published: {self.publication_year}, Author ID: {self.author_id}"
 
-
-with app.app_context():
-  db.create_all()
