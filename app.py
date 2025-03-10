@@ -42,17 +42,11 @@ def home():
         logging.debug(f"Processing author: {author.name}, birth_date: {author.birth_date}, date_of_death: {author.date_of_death}")
 
         # Check for valid dates
-        try:
-            birth_date = author.birth_date.isoformat()
-        except ValueError:
-            logging.error(f"Invalid birth_date for author {author.name}: {author.birth_date}")
-            birth_date = 'Invalid date'
 
-        try:
-            date_of_death = author.date_of_death.isoformat() if author.date_of_death else 'N/A'
-        except ValueError:
-            logging.error(f"Invalid date_of_death for author {author.name}: {author.date_of_death}")
-            date_of_death = 'Invalid date'
+
+        birth_date = author.birth_date.isoformat() if author.birth_date is not None else 'N/A'
+        date_of_death = author.date_of_death.isoformat() if author.date_of_death is not None else 'N/A'
+
 
         book_data.append({
             'title': book.title,
