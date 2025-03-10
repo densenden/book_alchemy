@@ -1,43 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library Home</title>
-    <style>
-        .book {
-            margin: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .cover {
-            width: 100px;
-            height: auto;
-        }
-        .info {
-            flex-grow: 1;
-        }
-    </style>
-</head>
-<body>
-    <h1>Library Books</h1>
-
-    {% for book in books %}
-        <div class="book">
-            <img src="{{ book.cover_url }}" alt="Cover of {{ book.title }}" class="cover">
-            <div class="info">
-                <h2>{{ book.title }}</h2>
-                <p>By {{ book.author }}</p>
-            </div>
-        </div>
-    {% endfor %}
-
-    <div>
-        <p><a href="{{ url_for('add_book') }}">Add New Book</a></p>
-        <p><a href="{{ url_for('add_author') }}">Add New Author</a></p>
-    </div>
-</body>
-</html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Sen Library Overview</title>
+            <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Trocchi&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+        </head>
+        <body>
+            <header>
+                <nav class="menu">
+                    <a href="{{ url_for('add_author') }}">Add Author</a>
+                    <a href="{{ url_for('add_book') }}">Add Book</a>
+                </nav>
+                <button class="menu-toggle">
+                    <img src="{{ url_for('static', filename='book_plus.png') }}" alt="Menu">
+            </header>
+            <main>
+                <h1>Library Books</h1>
+                <div class="book-grid">
+                    {% for book in books %}
+                        <div class="book">
+                            <div class="book-content">
+                                <img src="{{ book.cover_url }}" alt="Cover of {{ book.title }}" class="cover">
+                                 <div class="info">
+                                        <p class="title">{{ book.title }}</p>
+                                        <p class="author">By {{ book.author }}</p>
+                                        <p>Published: {{ book.year }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </main>
+            <script>
+                document.querySelector('.menu-toggle').addEventListener('click', function() {
+                    document.querySelector('.menu').classList.toggle('open');
+                });
+            </script>
+        </body>
+        </html>
