@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from data_models import db, Author, Book
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -47,3 +48,8 @@ def add_author():
             flash(f'Error adding author: {str(e)}', 'error')
 
     return render_template('add_author.html')
+
+app.secret_key = os.urandom(24)
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)
