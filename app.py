@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
 from data_models import db, Author, Book
 from datetime import datetime
@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 # Get the absolute path of the directory containing app.py
 base_dir = os.path.abspath(os.path.dirname(__file__))
+
 # Create path for database in 'data' subdirectory
 db_path = os.path.join(base_dir, 'data', 'library.sqlite')
 db_dir = os.path.dirname(db_path)
@@ -28,12 +29,22 @@ logging.basicConfig(level=logging.DEBUG)
 @app.route('/')
 def home():
     search_query = request.args.get('search', '')
+    criteria = request.args.get('criteria', 'title')
+
 
     # Query books with their authors using SQLAlchemy's join
     query = db.session.query(Book, Author).join(Author, Book.author_id == Author.id)
 
     if search_query:
         query = query.filter(Book.title.ilike(f'%{search_query}%'))
+
+
+    if criteria == 'title':
+        query = query.order_by(Book.title)
+    elif criteria == 'author':
+        query = query.order_by(Author.name)
+    elif criteria == 'year':
+        query = query.order_by(Book.publication_year)
 
     books = query.all()
 
@@ -48,6 +59,7 @@ def home():
         date_of_death = author.date_of_death.isoformat() if author.date_of_death is not None else 'N/A'
 
         book_data.append({
+            'id': book.id,
             'title': book.title,
             'isbn': book.isbn,
             'year': book.publication_year,
@@ -119,6 +131,7 @@ def add_book():
             db.session.commit()
 
             flash('Book added successfully!', 'success')
+            return redirect('/')
         except Exception as e:
             db.session.rollback()
             flash(f'Error adding book: {str(e)}', 'error')
@@ -127,6 +140,39 @@ def add_book():
     authors = Author.query.all()
     return render_template('add_book.html', authors=authors)
 
+
+@app.route('/book/<int:book_id>/delete', methods=['POST', 'DELETE'])
+def delete_book(book_id):
+    if book_id <= 130:
+        flash('Deleting this book is not allowed. Try a user-generated book. Thank you for not hacking our Library.', 'error')
+        return redirect('/')
+
+    if request.form.get('_method') == 'DELETE':
+        try:
+            # Find the book by ID
+            book = Book.query.get(book_id)
+            if not book:
+                flash('Book not found.', 'error')
+                return redirect('/')
+
+            # Check if the author has other books
+            author_id = book.author_id
+            db.session.delete(book)
+            db.session.commit()
+
+            # Check if the author has any other books
+            other_books = Book.query.filter_by(author_id=author_id).count()
+            if other_books == 0:
+                author = Author.query.get(author_id)
+                db.session.delete(author)
+                db.session.commit()
+
+            flash('Book deleted successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error deleting book: {str(e)}', 'error')
+
+    return redirect('/')
 
 app.secret_key = os.urandom(24)
 

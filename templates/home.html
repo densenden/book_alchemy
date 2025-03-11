@@ -8,26 +8,45 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <header>
-        <h1>Studio Sen Library</h1>
-    </header>
     <main>
-        <div class="book-grid">
+        <div class="book-grid" id="book-grid">
             <div class="book" id="menu-container">
                 <nav class="menu">
+                    <h1>Studio Sen Library</h1>
                     <a href="#" onclick="loadContent('{{ url_for('add_author') }}', 'top')" class="book-button">Add Author</a>
                     <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a>
+                    <div class="sort-options">
+                        <a href="/?criteria=title" class="book-button sort">Title</a>
+                        <a href="/?criteria=author" class="book-button sort">Author</a>
+                        <a href="/?criteria=year" class="book-button sort">Year</a>
+                    </div>
+                    <form action="/" method="get" class="search-form">
+                        <input type="text" name="search" placeholder="Search books..." class="search-books" required>
+                        <button type="submit">
+                            <a href="/?criteria=year" class="book-button">🔎</a>
+                        </button>
+                    </form>
                 </nav>
             </div>
+
             {% for book in books %}
-                <div class="book" onclick="window.location.href='https://www.amazon.com/s?k={{ book.title }}&tag=senbooks-21'">
+                <div class="book">
                     <div class="book-content">
-                        <img src="{{ book.cover_url }}" alt="Cover of {{ book.title }}" class="cover">
+                        <img src="{{ book.cover_url }}" alt="Cover" class="cover">
                         <div class="info">
-                            <p class="title">{{ book.title }}</p>
-                            <p class="author">By {{ book.author }}, {{ book.year }}</p>
+                            <h2 class="title">{{ book.title }}</h2>
+                            <p class="author">{{ book.author }}</p>
+                            <p>ISBN: {{ book.isbn }}</p>
+                            <p>Year: {{ book.year }}</p>
+                            <p>book.id: {{ book.id }}</p>
                         </div>
                     </div>
+                    {% if book.id > 130 %}
+                        <form action="/book/{{ book.id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="delete">Delete Book</button>
+                        </form>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
@@ -53,5 +72,19 @@
                 .catch(error => console.warn('Error loading content:', error));
         }
     </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const covers = document.querySelectorAll('.cover');
+        covers.forEach(cover => {
+            cover.onload = () => {
+                cover.classList.add('cover-loaded');
+            };
+            // If the image is already cached
+            if (cover.complete) {
+                cover.classList.add('cover-loaded');
+            }
+        });
+    });
+</script>
 </body>
 </html>

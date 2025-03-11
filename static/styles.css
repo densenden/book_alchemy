@@ -1,9 +1,24 @@
+:root {
+    --color-primary: ##F2F2F2;
+    --color-secondary: #3D4449;
+    --color-accent: #D9BACB;
+    --color-red: #ff6b6b;
+}
+
 body {
     font-family: 'DM Sans', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
+    background-color: var(--color-primary);
 }
+
+.form-book {
+    display: flex;
+    flex-direction: column;
+    align-items: space-around;
+    padding: 20px;
+}
+
 
 header {
     position: sticky;
@@ -21,6 +36,8 @@ header {
     min-height: 100%;
     flex-direction: column;
     gap: 0px;
+    display: flex;
+    align-items: center;
 }
 
 .menu.open {
@@ -29,11 +46,56 @@ header {
 
 .menu a {
     text-decoration: none;
-    color: #000;
+    color: var(--color-accent);
     font-size: 14px;
 }
 
+.menu a, .menu form {
+    flex: 0 0 auto;
+}
 
+.sort-options {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    width: -webkit-fill-available;
+}
+
+.sort-options a {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+    background-color: var(--color-secondary);
+    text-decoration: none;
+    height: auto;
+}
+
+.sort-options, .search-button:hover, a:hover {
+    background-color: var(--color-accent);
+}
+
+.search-books {
+    height: auto;
+    width: 100%;
+}
+
+.search-button {
+    height: auto;
+}
+
+.search-form {
+    width: 100%;
+}
+
+button {
+    padding: 5px;
+    margin: 0px;
+    background-color: var(--color-secondary);
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    width: -webkit-fill-available;
+}
 
 .book-grid {
     display: grid;
@@ -48,7 +110,7 @@ h1, h2, p {
 }
 
 h1 {
-    font-size: 24px;
+    font-size: 20px;
     text-align: center;
     margin-bottom: 20px;
     padding-top: 20px;
@@ -73,8 +135,8 @@ p {
 }
 
 .book {
-    background-color: #fff;
-    border: 1px solid #ddd;
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-accent);
     border-radius: 4px;
     overflow: hidden;
     display: flex;
@@ -84,9 +146,19 @@ p {
     position: relative;
 }
 
-.book-content {
+/*  <--- .book-content {
     transition: transform 0.3s ease-in-out, max-height 0.3s ease-in-out;
+} --->  This is the content that will be animated */
+
+.cover {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
 }
+
+.cover-loaded {
+    opacity: 1;
+}
+
 
 .cover, .author-photo {
     width: 100%;
@@ -97,18 +169,23 @@ p {
 .book-button {
     text-decoration: none;
     color: white;
-    height: 50%;
-    background-color: #ccc;
-    min-width: 100%;
-    display: flex;
+    height: 20%;
+    background-color: var(--color-secondary);
+    width: 100%;
     justify-content: center;
     align-items: center;
     font-size: 14px;
+    display: flex;
+}
+
+.sort {
+    display: flex;
 }
 
 .book-button:hover {
-    background-color: #999;
+    background-color: var(--color-accent);
     font-weight: bold;
+    color: var(--color-primary);
 }
 
 .info {
@@ -119,7 +196,7 @@ p {
 }
 
 .book:hover .book-content {
-    transform: translateY(-150px); /* Adjust this value to control how much the content moves up */
+    transform: translateY(-200px); /* Adjust this value to control how much the content moves up */
     max-height: 200px; /* Expanded height on hover */
     cursor: pointer;
 }
@@ -141,29 +218,8 @@ p {
 }
 
 
-#scanner-container {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    justify-content: center;
-    align-items: center;
-}
-
-video {
-    width: 80%;
-    max-width: 400px;
-}
-.scan-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5rem;
-}
-
 
 .slide-in-top {
-    animation: slideInTop 0.3s forwards;
 }
 
 .slide-in-bottom {
@@ -199,11 +255,12 @@ video {
 }
 
 form input, form select {
-    padding: 5px;
-    background: #ccc;
+    padding: 10px;
+    background: var(--color-secondary);
+    color: var(--color-accent);
     font-family: 'DM Sans', sans-serif;
     border: none;
-    width: 70%;
+    width: 100%;
 }
 
 form input::placeholder, form select::placeholder {
@@ -215,12 +272,30 @@ form input::placeholder, form select::placeholder {
     margin: 10px auto;
     padding: 5px 10px;
     width: 100%;
-    background-color: #ccc;
+    background-color: var(--color-secondary);
     border: none;
     cursor: pointer;
     font-family: 'DM Sans', sans-serif;
 }
 
 .back-button:hover {
-    background-color: #999;
+    background-color: var(--color-accent);
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 200,
+  'GRAD' 200,
+  'opsz' 24
+}
+
+.delete {
+    top: 20px;
+    right: 0;
+    margin-top: 15px;
+    background-color: var(--color-red);
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
 }
