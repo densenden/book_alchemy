@@ -15,7 +15,7 @@
                     <h1>Studio Sen Library</h1>
                     <a href="#" onclick="loadContent('{{ url_for('add_author') }}', 'top')" class="book-button">Add Author</a>
                     <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a>
-                    <a href="{{ url_for('home') }}" class="book-button">Back to overview</a>
+                    <a href="{{ url_for('home') }}" class="book-button">Back to Overview</a>
                     {% if book and book.id > 180 %}
                         <form action="/author/{{ author.id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
                             <input type="hidden" name="_method" value="DELETE">

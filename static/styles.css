@@ -338,13 +338,14 @@ form input::placeholder, form select::placeholder {
 
 .back-button {
     display: block;
-    margin: 10px auto;
     padding: 5px 10px;
     width: 100%;
+    color: var(--color-red);
     background-color: var(--color-secondary);
     border: none;
     cursor: pointer;
     font-family: 'DM Sans', sans-serif;
+    height: 20%;
 }
 
 .back-button:hover {
@@ -382,4 +383,8 @@ label {
     background-color: var(--color-secondary);
     color: var(--color-accent);
     padding: 5px;
+    width: 100%;
     }
+.add-form {
+    background-color: var(--color-secondary);
+}
