@@ -43,7 +43,7 @@
                             <p>book.id: {{ book.id }}</p>
                         </div>
                     </div>
-                    {% if book.id > 130 %}
+                    {% if book.id > 212 %}
                         <form action="/book/{{ book.id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="submit" class="delete">Delete Book</button>

@@ -91,7 +91,6 @@ def home():
 
     return render_template('home.html', books=book_data)
 
-
 @app.route('/book/<int:book_id>/detail', methods=['GET'])
 def book_detail(book_id):
     book, author, cover_url, year, isbn, birth_date, date_of_death = get_book_details(book_id)
@@ -109,6 +108,10 @@ def author_detail(author_id):
     birthdate = author.birth_date
     date_of_death = author.date_of_death
     books = Book.query.filter_by(author_id=author_id).all()
+
+    # Append cover URLs to books
+    for book in books:
+        book.cover_url = get_cover_url(book.isbn)
 
     # Ensure the book variable is included in the context
     book = books[0] if books else None
@@ -187,7 +190,7 @@ def add_book():
 
 @app.route('/book/<int:book_id>/delete', methods=['POST', 'DELETE'])
 def delete_book(book_id):
-    if book_id <= 180:
+    if book_id <= 212:
         flash('Deleting this book is not allowed. Try a user-generated book. Thank you for not hacking our Library.', 'error')
         return redirect('/')
 

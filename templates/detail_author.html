@@ -25,9 +25,9 @@
                 </nav>
             </div>
 
-            <div class="detail large">
+            <div class="detail">
                 <div class="book-content">
-                    <img src="{{ book.cover_url }}" alt="Cover" class="cover">
+                    <img src="{{ image_url }}" alt="Author Image" class="cover">
                 </div>
             </div>
 
@@ -37,15 +37,26 @@
                         <h1>{{ name }}</h1>
                         <p class="born">Born: {{ birthdate }}</p>
                         <p>{{ summary }}</p> </br>
-                        <p>Books by author:</p>
-                        <ul>
-                            {% for book in books %}
-                            <li><a href="{{ url_for('book_detail', book_id=book.id) }}">{{ book.title }} ({{ book.publication_year }})</a></li>
-                            {% endfor %}
-                        </ul>
                     </div>
                 </div>
             </div>
+            {% for book in books %}
+
+            <div class="book">
+                    <div class="book-content">
+                        <a href="/book/{{ book.id }}/detail" class="book-link">
+                        <img src="{{ book.cover_url }}" alt="Cover" class="cover">
+                        </a>
+                        <div class="info">
+                            <h2 class="title">{{ book.title }}</h2>
+                            <p class="author">{{ book.author }}</p>
+                            <p>ISBN: {{ book.isbn }}</p>
+                            <p>Year: {{ book.year }}</p>
+                            <p>book.id: {{ book.id }}</p>
+                        </div>
+                    </div>
+            </div>
+            {% endfor %}
         </div>
     </main>
 
