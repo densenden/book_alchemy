@@ -16,10 +16,10 @@
                     <a href="#" onclick="loadContent('{{ url_for('add_author') }}', 'top')" class="book-button">Add Author</a>
                     <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a>
                     <a href="{{ url_for('home') }}" class="book-button">Back to overview</a>
-                    {% if book and book.id > 130 %}
-                        <form action="/book/{{ book.id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
+                    {% if book and book.id > 180 %}
+                        <form action="/author/{{ author.id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
                             <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit" class="delete">Delete Book</button>
+                            <button type="submit" class="delete">Delete Author</button>
                         </form>
                     {% endif %}
                 </nav>
@@ -31,16 +31,16 @@
                 </div>
             </div>
 
-            <div class="detail">
+            <div class="detail high">
                 <div class="book-content">
                     <div class="info">
                         <h1>{{ name }}</h1>
-                        <p>{{ summary }}</p>
-                        <p>Birthdate: {{ birthdate }}</p>
+                        <p class="born">Born: {{ birthdate }}</p>
+                        <p>{{ summary }}</p> </br>
                         <p>Books by author:</p>
                         <ul>
                             {% for book in books %}
-                                <li>{{ book.title }} ({{ book.publication_year }})</li>
+                            <li><a href="{{ url_for('book_detail', book_id=book.id) }}">{{ book.title }} ({{ book.publication_year }})</a></li>
                             {% endfor %}
                         </ul>
                     </div>

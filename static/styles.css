@@ -106,8 +106,8 @@ h1, h2, p {
 h1 {
     font-size: 20px;
     text-align: center;
-    margin-bottom: 20px;
-    padding-top: 20px;
+    margin-bottom: 5px;
+    padding-top: 10px;
 }
 
 h2 {
@@ -119,8 +119,30 @@ p {
     font-size: 14px;
 }
 
+a {
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--color-secondary);
+}
+
+ul li {
+    list-style-type: none;
+    border-top: 1px solid var(--color-accent);
+    font-family: 'Trocchi', serif;
+    font-size: 16px;
+    margin: 0;
+}
+
 .author {
     color: #666;
+}
+
+.born {
+    color: var(--color-red);
+    text-align: center;
 }
 
 .title {
@@ -157,8 +179,14 @@ p {
     grid-row: span 2;
 }
 
+.high {
+    grid-row: span 2;
+    aspect-ratio: 1 / 2;
+}
+
 .book-content {
     transition: transform 0.3s ease-in-out, max-height 0.3s ease-in-out;
+
 }
 
 .cover {

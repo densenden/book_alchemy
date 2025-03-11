@@ -30,18 +30,20 @@ logging.basicConfig(level=logging.DEBUG)
 
 # For multiple methods to access the book details
 def get_book_details(book_id):
-    """ Get book details by ID to provide for methods """
-
+    """Get book details by ID to provide for methods."""
     book = Book.query.get(book_id)
     if not book:
         return None, None, None, None, None, None, None
     author = Author.query.get(book.author_id)
-    cover_url = f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg"
+    cover_url = get_cover_url(book.isbn)
     birth_date = author.birth_date.isoformat() if author.birth_date is not None else 'N/A'
     date_of_death = author.date_of_death.isoformat() if author.date_of_death is not None else 'N/A'
 
     return book, author, cover_url, book.publication_year, book.isbn, birth_date, date_of_death
 
+def get_cover_url(isbn):
+    """Generate the cover URL for a book based on its ISBN."""
+    return f"https://covers.openlibrary.org/b/isbn/{isbn}-L.jpg"
 
 def get_author_summary(name):
     """ Get author summary from Wikipedia """
@@ -185,7 +187,7 @@ def add_book():
 
 @app.route('/book/<int:book_id>/delete', methods=['POST', 'DELETE'])
 def delete_book(book_id):
-    if book_id <= 130:
+    if book_id <= 180:
         flash('Deleting this book is not allowed. Try a user-generated book. Thank you for not hacking our Library.', 'error')
         return redirect('/')
 
@@ -213,6 +215,38 @@ def delete_book(book_id):
         except Exception as e:
             db.session.rollback()
             flash(f'Error deleting book: {str(e)}', 'error')
+
+    return redirect('/')
+
+
+@app.route('/author/<int:author_id>/delete', methods=['POST', 'DELETE'])
+def delete_author(author_id):
+    if author_id <= 130:
+        flash('Deleting this Author is not allowed. Try a user-generated author. Thank you for not hacking our Library.', 'error')
+        return redirect('/')
+
+    if request.form.get('_method') == 'DELETE':
+        try:
+            # Find the author by ID
+            author = Author.query.get(author_id)
+            if not author:
+                flash('Author not found.', 'error')
+                return redirect('/')
+
+            # Check if the author has any books
+            books = Book.query.filter_by(author_id=author_id).count()
+            if books > 0:
+                flash('Author has books and cannot be deleted.', 'error')
+                return redirect('/')
+
+            # Delete the author
+            db.session.delete(author)
+            db.session.commit()
+
+            flash('Author deleted successfully!', 'success')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error deleting author: {str(e)}', 'error')
 
     return redirect('/')
 
