@@ -15,11 +15,11 @@
 
 
         <div class="book-grid">
-            <div class="book">
-                    <a href="{{ url_for('add_author') }}" class="book-button">Add Author</a>
-                    <a href="{{ url_for('add_book') }}" class="book-button">Add Book</a>
+            <nav class="book">
+                    <a href="#" onclick="loadContent('{{ url_for('add_author') }}')" class="book-button">Add Author</a>
+                    <a href="#" onclick="loadContent('{{ url_for('add_book') }}')" class="book-button">Add Book</a>
                 </nav>
-            </div>
+            </nav>
             {% for book in books %}
                 <div class="book" onclick="window.location.href='https://www.amazon.com/s?k={{ book.title }}&tag=your_affiliate_tag'">
                     <div class="book-content">
@@ -34,6 +34,19 @@
         </div>
     </main>
     <script>
+        function loadContent(url) {
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('menu-container').innerHTML = html;
+                    const backButton = document.createElement('button');
+                    backButton.textContent = 'Back';
+                    backButton.onclick = () => location.reload();
+                    document.getElementById('menu-container').appendChild(backButton);
+                })
+                .catch(error => console.warn('Error loading content:', error));
+        }
+
         document.querySelector('.menu-toggle').addEventListener('click', function() {
             document.querySelector('.menu').classList.toggle('open');
         });
