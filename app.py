@@ -29,16 +29,17 @@ db.init_app(app)
 logging.basicConfig(level=logging.DEBUG)
 
 # For multiple methods to access the book details
+
 def get_book_details(book_id):
     book = Book.query.get(book_id)
+    if not book:
+        return None, None, None, None, None, None, None
     author = Author.query.get(book.author_id)
     cover_url = f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg"
-    isbn = Book.query.get(isbn)
-    birthdate = author.birth_date.isoformat() if author.birth_date is not None else 'N/A'
+    birth_date = author.birth_date.isoformat() if author.birth_date is not None else 'N/A'
     date_of_death = author.date_of_death.isoformat() if author.date_of_death is not None else 'N/A'
 
-
-    return book, author, cover_url, book_id, isbn, birthdate, date_of_death
+    return book, author, cover_url, book.publication_year, book.isbn, birth_date, date_of_death
 
 @app.route('/')
 def home():
@@ -61,28 +62,26 @@ def home():
 
     book_data = []
     for book, author in books:
-        _, _, cover_url = get_book_details(book.id)
-        birth_date = author.birth_date.isoformat() if author.birth_date is not None else 'N/A'
-        date_of_death = author.date_of_death.isoformat() if author.date_of_death is not None else 'N/A'
-
-        book_data.append({
-            'id': book.id,
-            'title': book.title,
-            'isbn': book.isbn,
-            'year': book.publication_year,
-            'author': author.name,
-            'birth_date': birth_date,
-            'date_of_death': date_of_death,
-            'cover_url': cover_url
-        })
+        book, author, cover_url, year, isbn, birth_date, date_of_death = get_book_details(book.id)
+        if book and author:
+            book_data.append({
+                'id': book.id,
+                'title': book.title,
+                'isbn': isbn,
+                'year': year,
+                'author': author.name,
+                'birth_date': birth_date,
+                'date_of_death': date_of_death,
+                'cover_url': cover_url
+            })
 
     return render_template('home.html', books=book_data)
 
 
-@app.route('/book/<int:book_id>/detail', methods=['GET', 'DELETE'])
+@app.route('/book/<int:book_id>/detail', methods=['GET'])
 def book_detail(book_id):
-    book, author, cover_url, year, isbn = get_book_details(book_id)
-    return render_template('detail_book.html', book=book, author=author, cover_url=cover_url, year=year, isbn=isbn)
+    book, author, cover_url, year, isbn, birth_date, date_of_death = get_book_details(book_id)
+    return render_template('detail_book.html', book=book, author=author, cover_url=cover_url, year=year, isbn=isbn, birth_date=birth_date, date_of_death=date_of_death)
 
 
 @app.route('/add_author', methods=['GET', 'POST'])
