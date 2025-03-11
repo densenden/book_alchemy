@@ -27,27 +27,25 @@ logging.basicConfig(level=logging.DEBUG)
 
 @app.route('/')
 def home():
+    search_query = request.args.get('search', '')
+
     # Query books with their authors using SQLAlchemy's join
-    books = db.session.query(Book, Author) \
-        .join(Author, Book.author_id == Author.id) \
-        .all()
+    query = db.session.query(Book, Author).join(Author, Book.author_id == Author.id)
+
+    if search_query:
+        query = query.filter(Book.title.ilike(f'%{search_query}%'))
+
+    books = query.all()
 
     # Process books and fetch cover images
     book_data = []
     for book, author in books:
         # Get cover image from OpenLibrary API
         cover_url = f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg"
-        author_photo_url = f"https://covers.openlibrary.org/a/olid/{author.olid}-L.jpg"
-
-        # Log the dates for debugging
-        logging.debug(f"Processing author: {author.name}, birth_date: {author.birth_date}, date_of_death: {author.date_of_death}")
 
         # Check for valid dates
-
-
         birth_date = author.birth_date.isoformat() if author.birth_date is not None else 'N/A'
         date_of_death = author.date_of_death.isoformat() if author.date_of_death is not None else 'N/A'
-
 
         book_data.append({
             'title': book.title,
@@ -56,8 +54,7 @@ def home():
             'author': author.name,
             'birth_date': birth_date,
             'date_of_death': date_of_death,
-            'cover_url': cover_url,
-            'author_photo_url': author_photo_url
+            'cover_url': cover_url
         })
 
     return render_template('home.html', books=book_data)

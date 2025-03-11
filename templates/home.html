@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sen Library Overview</title>
+    <title>Studio Sen Library</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&family=Trocchi&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-
+    <header>
+            <h1>Studio Sen Library</h1>
+    </header>
     <main>
-        <h1>Library Books</h1>
+
 
         <div class="book-grid">
+            <div class="book">
+                    <a href="{{ url_for('add_author') }}" class="book-button">Add Author</a>
+                    <a href="{{ url_for('add_book') }}" class="book-button">Add Book</a>
+                </nav>
+            </div>
             {% for book in books %}
                 <div class="book" onclick="window.location.href='https://www.amazon.com/s?k={{ book.title }}&tag=your_affiliate_tag'">
                     <div class="book-content">
@@ -21,17 +28,7 @@
                             <p class="title">{{ book.title }}</p>
                             <p class="author">By {{ book.author }}, {{ book.year }}</p>
                         </div>
-                        <img src="{{ book.author_photo_url }}" alt="Photo of {{ book.author }}" class="author-photo">
-
                     </div>
-                    {% if loop.first %}
-                   <div class="book">
-                        <nav class="menu">
-                            <a href="{{ url_for('add_author') }}">Add Author</a>
-                            <a href="{{ url_for('add_book') }}">Add Book</a>
-                        </nav>
-                   </div>
-                    {% endif %}
                 </div>
             {% endfor %}
         </div>

@@ -97,6 +97,22 @@ p {
     object-fit: cover;
 }
 
+.book-button {
+    text-decoration: none;
+    color: white;
+    height: 50%;
+    background-color: #ccc;
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;}
+
+.book-button:hover {
+    background-color: #999;
+    font-weight: bold;
+}
+
 .info {
     padding: 10px;
     text-align: left;
