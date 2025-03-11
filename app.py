@@ -29,8 +29,9 @@ db.init_app(app)
 logging.basicConfig(level=logging.DEBUG)
 
 # For multiple methods to access the book details
-
 def get_book_details(book_id):
+    """ Get book details by ID to provide for methods """
+
     book = Book.query.get(book_id)
     if not book:
         return None, None, None, None, None, None, None
@@ -40,6 +41,17 @@ def get_book_details(book_id):
     date_of_death = author.date_of_death.isoformat() if author.date_of_death is not None else 'N/A'
 
     return book, author, cover_url, book.publication_year, book.isbn, birth_date, date_of_death
+
+
+def get_author_summary(name):
+    """ Get author summary from Wikipedia """
+    url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{name}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        return data.get('extract', 'No summary available.')
+    return 'No summary available.'
+
 
 @app.route('/')
 def home():
@@ -82,6 +94,24 @@ def home():
 def book_detail(book_id):
     book, author, cover_url, year, isbn, birth_date, date_of_death = get_book_details(book_id)
     return render_template('detail_book.html', book=book, author=author, cover_url=cover_url, year=year, isbn=isbn, birth_date=birth_date, date_of_death=date_of_death)
+
+
+@app.route('/author/<int:author_id>/detail', methods=['GET'])
+def author_detail(author_id):
+    author = Author.query.get(author_id)
+    if not author:
+        flash('Author not found.', 'error')
+        return redirect('/')
+
+    summary = get_author_summary(author.name)
+    birthdate = author.birth_date
+    date_of_death = author.date_of_death
+    books = Book.query.filter_by(author_id=author_id).all()
+
+    # Ensure the book variable is included in the context
+    book = books[0] if books else None
+
+    return render_template('detail_author.html', name=author.name, summary=summary, birthdate=birthdate, date_of_death=date_of_death, books=books, book=book)
 
 
 @app.route('/add_author', methods=['GET', 'POST'])
