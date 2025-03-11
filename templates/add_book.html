@@ -1,39 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="de">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <style>
-      .success { color: green; }
-    </style>
-  </head>
-  <body>
+    <title>Buch-Scanner</title>
+    <script src="https://unpkg.com/@zxing/browser@latest"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
-          <div class="{{ category }}">{{ message }}</div>
         {% endfor %}
       {% endif %}
     {% endwith %}
 
     <form action="/add_book" method="POST">
-      <label for="isbn">ISBN:</label>
-      <input type="text" id="isbn" name="isbn" required><br><br>
-      <label for="title">Book Title:</label>
-      <input type="text" id="title" name="title" required><br><br>
+        <input type="text" id="isbn" name="isbn" placeholder="ISBN" required>
+        <button type="button" class="scan-button" id="scan-btn">📷</button><br><br>
 
-      <label for="publication_year">Publication Year:</label>
-      <input type="number" id="publication_year" name="publication_year" required><br><br>
+        <input type="text" id="title" name="title" placeholder="Book Title" required><br><br>
 
-      <label for="author_id">Author:</label>
-      <select id="author_id" name="author_id" required>
-        {% for author in authors %}
-          <option value="{{ author.id }}">{{ author.name }}</option>
-        {% endfor %}
-      </select><br><br>
+        <input type="number" id="publication_year" name="publication_year" placeholder="Publication Year" required><br><br>
 
-      <input type="submit" value="Add Book">
+        <select id="author_id" name="author_id" required>
+            <option value="" disabled selected>Select Author</option>
+            {% for author in authors %}
+                <option value="{{ author.id }}">{{ author.name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <input type="submit" value="Add Book">
     </form>
-  </body>
+
+    <div id="scanner-container">
+        <video id="video" autoplay></video>
+        <button onclick="stopScanner()">Schließen</button>
+    </div>
+
+    <script>
+        const scanBtn = document.getElementById('scan-btn');
+        const isbnInput = document.getElementById('isbn');
+        const scannerContainer = document.getElementById('scanner-container');
+        const video = document.getElementById('video');
+
+        let scanner;
+
+        scanBtn.addEventListener('click', async () => {
+            scannerContainer.style.display = 'flex';
+
+            scanner = new ZXing.BrowserMultiFormatReader();
+            const videoInputDevices = await scanner.listVideoInputDevices();
+            const backCamera = videoInputDevices[0]?.deviceId;
+
+            scanner.decodeFromVideoDevice(backCamera, 'video', (result, err) => {
+                if (result) {
+                    isbnInput.value = result.text;
+                    stopScanner();
+                }
+            });
+        });
+
+        function stopScanner() {
+            scannerContainer.style.display = 'none';
+            scanner.reset();
+        }
+    </script>
+</body>
 </html>

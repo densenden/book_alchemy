@@ -139,3 +139,88 @@ p {
 .book .book-content {
     animation: bounce 5s ease-in-out; /* Bounce animation on mouse out */
 }
+
+
+#scanner-container {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    justify-content: center;
+    align-items: center;
+}
+
+video {
+    width: 80%;
+    max-width: 400px;
+}
+.scan-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+
+.slide-in-top {
+    animation: slideInTop 0.3s forwards;
+}
+
+.slide-in-bottom {
+    animation: slideInBottom 0.3s forwards;
+}
+
+.slide-out-top {
+    animation: slideOutTop 0.3s forwards;
+}
+
+.slide-out-bottom {
+    animation: slideOutBottom 0.3s forwards;
+}
+
+@keyframes slideInTop {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes slideInBottom {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+@keyframes slideOutTop {
+    from { transform: translateY(0); }
+    to { transform: translateY(-100%); }
+}
+
+@keyframes slideOutBottom {
+    from { transform: translateY(0); }
+    to { transform: translateY(100%); }
+}
+
+form input, form select {
+    padding: 5px;
+    background: #ccc;
+    font-family: 'DM Sans', sans-serif;
+    border: none;
+    width: 70%;
+}
+
+form input::placeholder, form select::placeholder {
+    color: #999;
+}
+
+.back-button {
+    display: block;
+    margin: 10px auto;
+    padding: 5px 10px;
+    width: 100%;
+    background-color: #ccc;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.back-button:hover {
+    background-color: #999;
+}
