@@ -1,6 +1,8 @@
 # Studio Sen Library
 
 Studio Sen Library is a web application for managing a library of books and authors. It allows users to add, view, and delete books and authors.
+![Booksk Overview home](static/preview.png)
+
 
 ## Setup
 
@@ -44,3 +46,6 @@ Studio Sen Library is a web application for managing a library of books and auth
 ## License
 
 This project is licensed under the MIT License.
+
+![Whole Page of Books](static/capture.png)
+
