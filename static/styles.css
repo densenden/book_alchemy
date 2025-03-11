@@ -12,12 +12,6 @@ body {
     background-color: var(--color-primary);
 }
 
-.form-book {
-    display: flex;
-    flex-direction: column;
-    align-items: space-around;
-    padding: 20px;
-}
 
 
 header {
@@ -146,9 +140,9 @@ p {
     position: relative;
 }
 
-/*  <--- .book-content {
+.book-content {
     transition: transform 0.3s ease-in-out, max-height 0.3s ease-in-out;
-} --->  This is the content that will be animated */
+}
 
 .cover {
     opacity: 0;
@@ -169,7 +163,7 @@ p {
 .book-button {
     text-decoration: none;
     color: white;
-    height: 20%;
+    height: 15%;
     background-color: var(--color-secondary);
     width: 100%;
     justify-content: center;
@@ -299,3 +293,18 @@ form input::placeholder, form select::placeholder {
     font-size: 14px;
     cursor: pointer;
 }
+
+.success {
+    color: var(--color-accent);
+     }
+
+.error {
+    color: var(--color-red);
+    }
+
+label {
+    font-size: 10px;
+    background-color: var(--color-secondary);
+    color: var(--color-accent);
+    padding: 5px;
+    }

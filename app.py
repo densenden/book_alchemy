@@ -1,6 +1,8 @@
 import os
 from flask import Flask, render_template, request, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Delete
+
 from data_models import db, Author, Book
 from datetime import datetime
 import requests
@@ -26,18 +28,27 @@ db.init_app(app)
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
+# For multiple methods to access the book details
+def get_book_details(book_id):
+    book = Book.query.get(book_id)
+    author = Author.query.get(book.author_id)
+    cover_url = f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg"
+    isbn = Book.query.get(isbn)
+    birthdate = author.birth_date.isoformat() if author.birth_date is not None else 'N/A'
+    date_of_death = author.date_of_death.isoformat() if author.date_of_death is not None else 'N/A'
+
+
+    return book, author, cover_url, book_id, isbn, birthdate, date_of_death
+
 @app.route('/')
 def home():
     search_query = request.args.get('search', '')
     criteria = request.args.get('criteria', 'title')
 
-
-    # Query books with their authors using SQLAlchemy's join
     query = db.session.query(Book, Author).join(Author, Book.author_id == Author.id)
 
     if search_query:
         query = query.filter(Book.title.ilike(f'%{search_query}%'))
-
 
     if criteria == 'title':
         query = query.order_by(Book.title)
@@ -48,13 +59,9 @@ def home():
 
     books = query.all()
 
-    # Process books and fetch cover images
     book_data = []
     for book, author in books:
-        # Get cover image from OpenLibrary API
-        cover_url = f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg"
-
-        # Check for valid dates
+        _, _, cover_url = get_book_details(book.id)
         birth_date = author.birth_date.isoformat() if author.birth_date is not None else 'N/A'
         date_of_death = author.date_of_death.isoformat() if author.date_of_death is not None else 'N/A'
 
@@ -70,6 +77,12 @@ def home():
         })
 
     return render_template('home.html', books=book_data)
+
+
+@app.route('/book/<int:book_id>/detail', methods=['GET', 'DELETE'])
+def book_detail(book_id):
+    book, author, cover_url, year, isbn = get_book_details(book_id)
+    return render_template('detail_book.html', book=book, author=author, cover_url=cover_url, year=year, isbn=isbn)
 
 
 @app.route('/add_author', methods=['GET', 'POST'])
@@ -173,6 +186,7 @@ def delete_book(book_id):
             flash(f'Error deleting book: {str(e)}', 'error')
 
     return redirect('/')
+
 
 app.secret_key = os.urandom(24)
 

@@ -15,26 +15,14 @@
                     <h1>Studio Sen Library</h1>
                     <a href="#" onclick="loadContent('{{ url_for('add_author') }}', 'top')" class="book-button">Add Author</a>
                     <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a>
-                    <div class="sort-options">
-                        <a href="/?criteria=title" class="book-button sort">Title</a>
-                        <a href="/?criteria=author" class="book-button sort">Author</a>
-                        <a href="/?criteria=year" class="book-button sort">Year</a>
-                    </div>
-                    <form action="/" method="get" class="search-form">
-                        <input type="text" name="search" placeholder="Search books..." class="search-books" required>
-                        <button type="submit">
-                            <a href="/?criteria=year" class="book-button">🔎</a>
-                        </button>
-                    </form>
+                    <a href="#" onclick="loadContent('{{ url_for('/') }}', 'bottom')" class="book-button">Back to overview</a>
                 </nav>
             </div>
 
-            {% for book in books %}
+            {% book %}
                 <div class="book">
                     <div class="book-content">
-                        <a href="/book/{{ book.id }}/detail" class="book-link">
                         <img src="{{ book.cover_url }}" alt="Cover" class="cover">
-                        </a>
                         <div class="info">
                             <h2 class="title">{{ book.title }}</h2>
                             <p class="author">{{ book.author }}</p>
