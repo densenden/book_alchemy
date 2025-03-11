@@ -36,7 +36,8 @@ def home():
     book_data = []
     for book, author in books:
         # Get cover image from OpenLibrary API
-        cover_url = f"https://covers.openlibrary.org/b/isbn/{book.isbn}-M.jpg"
+        cover_url = f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg"
+        author_photo_url = f"https://covers.openlibrary.org/a/olid/{author.olid}-L.jpg"
 
         # Log the dates for debugging
         logging.debug(f"Processing author: {author.name}, birth_date: {author.birth_date}, date_of_death: {author.date_of_death}")
@@ -55,7 +56,8 @@ def home():
             'author': author.name,
             'birth_date': birth_date,
             'date_of_death': date_of_death,
-            'cover_url': cover_url
+            'cover_url': cover_url,
+            'author_photo_url': author_photo_url
         })
 
     return render_template('home.html', books=book_data)

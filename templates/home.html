@@ -8,11 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <header>
-        <button class="menu-toggle">
-            <img src="{{ url_for('static', filename='book_plus.png') }}" alt="MenuIcon">
-        </button>
-    </header>
+
     <main>
         <h1>Library Books</h1>
 
@@ -25,9 +21,11 @@
                             <p class="title">{{ book.title }}</p>
                             <p class="author">By {{ book.author }}, {{ book.year }}</p>
                         </div>
+                        <img src="{{ book.author_photo_url }}" alt="Photo of {{ book.author }}" class="author-photo">
+
                     </div>
                     {% if loop.first %}
-                   <div class="book" onclick="window.location.href='https://www.amazon.com/s?k={{ book.title }}&tag=your_affiliate_tag'">
+                   <div class="book">
                         <nav class="menu">
                             <a href="{{ url_for('add_author') }}">Add Author</a>
                             <a href="{{ url_for('add_book') }}">Add Book</a>
