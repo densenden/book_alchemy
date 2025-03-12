@@ -65,17 +65,21 @@ def get_wikipedia_author_image(author_name):
 def home():
     search_query = request.args.get('search', '')
     criteria = request.args.get('criteria', 'title')
+    direction = request.args.get('direction', 'asc')
+
     query = db.session.query(Book, Author).join(Author, Book.author_id == Author.id)
+
     if search_query:
         query = query.filter(Book.title.ilike(f'%{search_query}%'))
+
     if criteria == 'title':
-        query = query.order_by(Book.title)
+        query = query.order_by(Book.title.asc() if direction == 'asc' else Book.title.desc())
     elif criteria == 'author':
-        query = query.order_by(Author.name)
+        query = query.order_by(Author.name.asc() if direction == 'asc' else Author.name.desc())
     elif criteria == 'year':
-        query = query.order_by(Book.publication_year)
+        query = query.order_by(Book.publication_year.asc() if direction == 'asc' else Book.publication_year.desc())
     elif criteria == 'id':
-        query = query.order_by(Book.id)
+        query = query.order_by(Book.id.asc() if direction == 'asc' else Book.id.desc())
 
     books = query.all()
     book_data = [
@@ -86,7 +90,7 @@ def home():
         }
         for book, author in books
     ]
-    return render_template('home.html', books=book_data)
+    return render_template('home.html', books=book_data, criteria=criteria, direction=direction)
 
 
 @app.route('/book/<int:book_id>/detail', methods=['GET'])
