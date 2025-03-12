@@ -174,7 +174,7 @@ def author_detail(author_id):
         'year': book.publication_year,
         'author_image': author_image,
         'next_author_id': next_author_id,
-        'prev_author_id': prev_author_id
+        'prev_author_id'  : prev_author_id
     }
 
     return render_template('detail_author.html', author=author_data)
