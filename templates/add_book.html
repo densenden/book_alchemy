@@ -8,13 +8,7 @@
 </head>
 
 <body>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-            <div class="{{ category }} message">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
+
 <h1>New Book</h1>
     <form action="/add_book" method="POST" class="add-form">
         <input type="text" id="isbn" name="isbn" placeholder="ISBN" required><br>

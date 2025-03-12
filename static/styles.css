@@ -370,12 +370,24 @@ form input::placeholder, form select::placeholder {
     cursor: pointer;
 }
 
+.message {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 4px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
 .success {
-    color: var(--color-accent);
+    background-color: var(--color-accent);
+    color: var(--color-primary);
      }
 
 .error {
-    color: var(--color-red);
+    background-color: var(--color-red);
+    color: var(--color-accent);
     }
 
 label {

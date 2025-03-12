@@ -10,14 +10,24 @@
 <body>
     <main>
         <div class="book-grid" id="book-grid">
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="{{ category }} message book">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+
+
             <div class="book" id="menu-container">
                 <nav class="menu">
                     <h1>Studio Sen Library</h1>
                     <a href="#" onclick="loadContent('{{ url_for('add_author') }}', 'top')" class="book-button">Add Author</a>
-                    <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a>
-<a href="https://www.amazon.com/dp/B08N5WRWNW?tag=s" class="book-button">Check out on amazon</a>
+                    <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a><a href="https://www.amazon.com/dp/B08N5WRWNW?tag=s" class="book-button">Check out on amazon</a>
                     <a href="{{ url_for('home') }}" class="book-button">Back to Overview</a>
-                    {% if book.id > 212 %}
+                    {% if book.id > 50 %}
                         <form action="/book/{{ book.id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="submit" class="delete">Delete Book</button>

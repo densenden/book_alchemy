@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     const lazyImages = document.querySelectorAll('.lazy');
-
     const imageObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -49,4 +48,12 @@ document.addEventListener('DOMContentLoaded', function() {
     lazyImages.forEach(image => {
         imageObserver.observe(image);
     });
+
+    // Hide .message elements after 5 seconds
+    setTimeout(function() {
+        const messages = document.querySelectorAll('.message');
+        messages.forEach(message => {
+            message.style.display = 'none';
+        });
+    }, 5000); // 5000 milliseconds = 5 seconds
 });

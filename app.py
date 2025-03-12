@@ -45,6 +45,10 @@ def get_cover_url(isbn):
     """Generate the cover URL for a book based on its ISBN."""
     return f"https://covers.openlibrary.org/b/isbn/{isbn}-L.jpg"
 
+# def get_author_image_url(name):
+    """Generate the cover URL for a book based on its ISBN."""
+ #   pass return f"https://covers.openlibrary.org/b/isbn/{isbn}-L.jpg"
+
 def get_author_summary(name):
     """ Get author summary from Wikipedia """
     url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{name}"
@@ -190,7 +194,7 @@ def add_book():
 
 @app.route('/book/<int:book_id>/delete', methods=['POST', 'DELETE'])
 def delete_book(book_id):
-    if book_id <= 212:
+    if book_id <= 50:
         flash('Deleting this book is not allowed. Try a user-generated book. Thank you for not hacking our Library.', 'error')
         return redirect('/')
 
