@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, flash, redirect
+from flask import Flask, render_template, request, flash, redirect, jsonify
 from datetime import datetime
 import requests
 from data_models import db, Book, Author  # Import the db instance and models
@@ -8,6 +8,56 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(os.path.abspath(os.path.dirname(__file__)), "data", "library.sqlite")}'
 app.secret_key = os.urandom(24)
 db.init_app(app)  # Initialize the db instance with the app
+
+def get_wikipedia_author_image(author_name):
+    try:
+        search_url = f"https://en.wikipedia.org/w/api.php"
+        search_params = {
+            "action": "query",
+            "format": "json",
+            "list": "search",
+            "srsearch": author_name
+        }
+        search_response = requests.get(search_url, params=search_params).json()
+        if not search_response["query"]["search"]:
+            return url_for('static', filename='default_author_photo.png')  # Fallback image
+
+        page_title = search_response["query"]["search"][0]["title"]
+
+        page_info_url = f"https://en.wikipedia.org/w/api.php"
+        page_info_params = {
+            "action": "query",
+            "format": "json",
+            "titles": page_title,
+            "prop": "pageprops",
+            "ppprop": "wikibase_item"
+        }
+        page_info_response = requests.get(page_info_url, params=page_info_params).json()
+        pages = page_info_response["query"]["pages"]
+        wikidata_id = next(iter(pages.values())).get("pageprops", {}).get("wikibase_item", None)
+
+        if not wikidata_id:
+            return url_for('static', filename='default_author_photo.png')  # Fallback image
+
+        wikidata_url = f"https://www.wikidata.org/w/api.php"
+        wikidata_params = {
+            "action": "wbgetclaims",
+            "format": "json",
+            "entity": wikidata_id,
+            "property": "P18"
+        }
+        wikidata_response = requests.get(wikidata_url, params=wikidata_params).json()
+        claims = wikidata_response.get("claims", {}).get("P18", [])
+
+        if not claims:
+            return url_for('static', filename='default_author_photo.png')  # Fallback image
+
+        image_filename = claims[0]["mainsnak"]["datavalue"]["value"]
+        image_url = f"https://commons.wikimedia.org/wiki/Special:FilePath/{image_filename}"
+        return image_url
+
+    except Exception as e:
+        return url_for('static', filename='default_author_photo.png')  # Fallback image
 
 @app.route('/')
 def home():
@@ -60,6 +110,7 @@ def author_detail(author_id):
     books = Book.query.filter_by(author_id=author_id).all()
     for book in books:
         book.cover_url = f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg"
+    author_image = get_wikipedia_author_image(author.name)
     return render_template(
         'detail_author.html',
         name=author.name,
@@ -68,7 +119,8 @@ def author_detail(author_id):
         date_of_death=author.date_of_death,
         books=books,
         id=author.id,
-        book=books[0] if books else None
+        book=books[0] if books else None,
+        author_image=author_image
     )
 
 def get_author_summary(name):
@@ -86,10 +138,10 @@ def add_author():
             name = request.form['name']
             birth_date = datetime.strptime(request.form['birthdate'], '%Y-%m-%d').date()
             date_of_death = datetime.strptime(request.form['date_of_death'], '%Y-%m-%d').date() if request.form['date_of_death'] else None
+            new_author = Author(name=name, birth_date=birth_date, date_of_death=date_of_death)
             db.session.add(new_author)
             db.session.commit()
             flash('Author added successfully!', 'success')
-        except ValueError as ve:
             flash(f'Invalid date format: {str(ve)}', 'error')
         except Exception as e:
             db.session.rollback()
