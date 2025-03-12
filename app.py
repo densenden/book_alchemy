@@ -109,18 +109,22 @@ def book_detail(book_id):
     prev_book = Book.query.filter(Book.id < book_id).order_by(Book.id.desc()).first()
     prev_book_id = prev_book.id if prev_book else None
 
-    return render_template(
-        'detail_book.html',
-        book=book,
-        author=author,
-        cover_url=f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg",
-        year=book.publication_year,
-        isbn=book.isbn,
-        birth_date=author.birth_date if author else 'N/A',
-        date_of_death=author.date_of_death if author else 'N/A',
-        next_book_id=next_book_id,
-        prev_book_id=prev_book_id
-    )
+    book_data = {
+        'id': book.id,
+        'title': book.title,
+        'isbn': book.isbn,
+        'year': book.publication_year,
+        'author': author.name if author else 'N/A',
+        'author_id': author.id if author else None,
+        'birth_date': author.birth_date if author else 'N/A',
+        'date_of_death': author.date_of_death if author else 'N/A',
+        'cover_url': f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg",
+        'next_book_id': next_book_id,
+        'prev_book_id': prev_book_id
+    }
+
+    return render_template('detail_book.html', book=book_data)
+
 
 @app.route('/author/<int:author_id>/detail')
 def author_detail(author_id):
@@ -164,6 +168,7 @@ def get_author_summary(name):
         return data.get('extract', 'No summary available.')
     return 'No summary available.'
 
+
 @app.route('/add_author', methods=['GET', 'POST'])
 def add_author():
     if request.method == 'POST':
@@ -180,6 +185,7 @@ def add_author():
             db.session.rollback()
     return render_template('add_author.html')
 
+
 @app.route('/add_book', methods=['GET', 'POST'])
 def add_book():
     if request.method == 'POST':
@@ -192,16 +198,17 @@ def add_book():
             db.session.add(new_book)
             db.session.commit()
             flash('Book added successfully!', 'success')
-            return redirect('/')
+            return redirect('/?criteria=id&direction=desc')
         except Exception as e:
             db.session.rollback()
             flash(f'Error adding book: {str(e)}', 'error')
     authors = Author.query.all()
     return render_template('add_book.html', authors=authors)
 
+
 @app.route('/book/<int:book_id>/delete', methods=['POST', 'DELETE'])
 def delete_book(book_id):
-    if book_id <= 50:
+    if book_id <= 600:
         flash('Deleting this book is not allowed.', 'error')
         return redirect('/')
     if request.form.get('_method') == 'DELETE':
@@ -221,6 +228,7 @@ def delete_book(book_id):
             db.session.rollback()
             flash(f'Error deleting book: {str(e)}', 'error')
     return redirect('/')
+
 
 @app.route('/author/<int:author_id>/delete', methods=['POST', 'DELETE'])
 def delete_author(author_id):
@@ -243,6 +251,7 @@ def delete_author(author_id):
             db.session.rollback()
             flash(f'Error deleting author: {str(e)}', 'error')
     return redirect('/')
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

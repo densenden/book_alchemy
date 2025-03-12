@@ -27,13 +27,13 @@
                     <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a>
                     <div class="sort-options">
                             <a href="/?criteria=title&direction={{ 'desc' if criteria == 'title' and direction == 'asc' else 'asc' }}" class="sort">
-                                Title {{ '↑' if criteria == 'title' and direction == 'asc' else '↓' if criteria == 'title' else '' }}
+                                Title <br> {{ '↑' if criteria == 'title' and direction == 'asc' else '↓' if criteria == 'title' else '' }}
                             </a>
                             <a href="/?criteria=author&direction={{ 'desc' if criteria == 'author' and direction == 'asc' else 'asc' }}" class="sort">
-                                Author {{ '↑' if criteria == 'author' and direction == 'asc' else '↓' if criteria == 'author' else '' }}
+                                Author <br> {{ '↑' if criteria == 'author' and direction == 'asc' else '↓' if criteria == 'author' else '' }}
                             </a>
                             <a href="/?criteria=year&direction={{ 'desc' if criteria == 'year' and direction == 'asc' else 'asc' }}" class="sort">
-                                Year {{ '↑' if criteria == 'year' and direction == 'asc' else '↓' if criteria == 'year' else '' }}
+                                Year <br> {{ '↑' if criteria == 'year' and direction == 'asc' else '↓' if criteria == 'year' else '' }}
                             </a>
                             <a href="/?criteria=id&direction={{ 'desc' if criteria == 'id' and direction == 'asc' else 'asc' }}" class="sort">
                                 ID <br> {{ '↑' if criteria == 'id' and direction == 'asc' else '↓' if criteria == 'id' else '' }}
@@ -62,7 +62,7 @@
                             <p>book.id: {{ book.id }}</p>
                         </div>
                     </div>
-                    {% if book.id > 50 %}
+                    {% if book.id > 600 %}
                         <form action="/book/{{ book.id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="submit" class="delete">Delete Book</button>

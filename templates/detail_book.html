@@ -26,14 +26,14 @@
                     <h1>Studio Sen Library</h1>
                     <a href="#" onclick="loadContent('{{ url_for('add_author') }}', 'top')" class="book-button">Add Author</a>
                     <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a>
-                    <a href="https://www.amazon.com/dp/B08N5WRWNW?tag=s" class="book-button">Check out on amazon</a>
+                    <a href="https://www.amazon.de/dp/ASIN/?tag=senbooks-21" class="book-button">Check out on Amazon</a>
                     <a href="{{ url_for('home') }}" class="book-button">Back to Overview</a>
                                     </nav>
             </div>
 
                 <div class="detail large">
                     <div class="book-content">
-                        <img src="{{ cover_url }}" alt="Cover" class="cover">
+                        <img src="{{ book.cover_url }}" alt="Cover" class="cover">
                     </div>
                 </div>
 
@@ -41,11 +41,10 @@
                     <div class="book-content">
                         <div class="info">
                             <h2 class="title">{{ book.title }}</h2>
-                            <p class="author"><a href="{{ url_for('author_detail', author_id=author.id) }}">{{ author.name }}</a></p>
-                            <p>ISBN: {{ book.isbn }}</p>
+                                <p class="author"><a href="{{ url_for('author_detail', author_id=book.author_id) }}">{{ book.author }}</a></p>                            <p>ISBN: {{ book.isbn }}</p>
                             <p>Year: {{ book.year }}</p>
                             <p>book.id: {{ book.id }}</p>
-                            {% if book.id > 50 %}
+                            {% if book.id > 600 %}
                         <form action="/book/{{ book.id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
                                 <input type="hidden" name="_method" value="DELETE">
                                 <button type="submit" class="delete">Delete Book</button>
@@ -56,8 +55,8 @@
 
 
                 </div>
-            <div class="arrow book" onclick="location.href='/book/{{ prev_book_id }}/detail'" {% if not prev_book_id %}style="visibility: hidden;"{% endif %}><</div>
-            <div class="arrow book" onclick="location.href='/book/{{ next_book_id }}/detail'" {% if not next_book_id %}style="visibility: hidden;"{% endif %}>></div>
+            <div class="arrow book" onclick="location.href='/book/{{ book.prev_book_id }}/detail'" {% if not book.prev_book_id %}style="visibility: hidden;"{% endif %}><</div>
+            <div class="arrow book" onclick="location.href='/book/{{ book.next_book_id }}/detail'" {% if not book.next_book_id %}style="visibility: hidden;"{% endif %}>></div>
         </main>
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 
