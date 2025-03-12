@@ -56,4 +56,29 @@ document.addEventListener('DOMContentLoaded', function() {
             message.style.display = 'none';
         });
     }, 5000); // 5000 milliseconds = 5 seconds
+
+    document.addEventListener('keydown', function(event) {
+    if (event.key === 'ArrowLeft') {
+        const prevButton = document.querySelector('.arrow.book[onclick*="prev_book_id"]');
+        if (prevButton && prevButton.style.visibility !== 'hidden') {
+            prevButton.click();
+        } else {
+            const prevAuthorButton = document.querySelector('.arrow.author[onclick*="prev_author_id"]');
+            if (prevAuthorButton && prevAuthorButton.style.visibility !== 'hidden') {
+                prevAuthorButton.click();
+            }
+        }
+    } else if (event.key === 'ArrowRight') {
+        const nextButton = document.querySelector('.arrow.book[onclick*="next_book_id"]');
+        if (nextButton && nextButton.style.visibility !== 'hidden') {
+            nextButton.click();
+        } else {
+            const nextAuthorButton = document.querySelector('.arrow.author[onclick*="next_author_id"]');
+            if (nextAuthorButton && nextAuthorButton.style.visibility !== 'hidden') {
+                nextAuthorButton.click();
+            }
+        }
+    }
+});
+
 });

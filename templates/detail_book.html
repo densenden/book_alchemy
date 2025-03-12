@@ -26,7 +26,7 @@
                     <h1>Studio Sen Library</h1>
                     <a href="#" onclick="loadContent('{{ url_for('add_author') }}', 'top')" class="book-button">Add Author</a>
                     <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a>
-                    <a href="https://www.amazon.de/dp/ASIN/?tag=senbooks-21" class="book-button">Check out on Amazon</a>
+                    <a href="https://www.amazon.com/s?k={{ book.title }}" target="_blank" class="book-button">Check out on Amazon</a>
                     <a href="{{ url_for('home') }}" class="book-button">Back to Overview</a>
                                     </nav>
             </div>
