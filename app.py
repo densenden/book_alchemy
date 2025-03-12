@@ -2,12 +2,13 @@ import os
 from flask import Flask, render_template, request, flash, redirect, jsonify
 from datetime import datetime
 import requests
-from data_models import db, Book, Author  # Import the db instance and models
+from data_models import db, Book, Author
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(os.path.abspath(os.path.dirname(__file__)), "data", "library.sqlite")}'
 app.secret_key = os.urandom(24)
 db.init_app(app)  # Initialize the db instance with the app
+
 
 def get_wikipedia_author_image(author_name):
     try:
@@ -20,7 +21,7 @@ def get_wikipedia_author_image(author_name):
         }
         search_response = requests.get(search_url, params=search_params).json()
         if not search_response["query"]["search"]:
-            return url_for('static', filename='default_author_photo.png')  # Fallback image
+            return '/static/default_author_photo.png'  # Fallback image
 
         page_title = search_response["query"]["search"][0]["title"]
 
@@ -37,7 +38,7 @@ def get_wikipedia_author_image(author_name):
         wikidata_id = next(iter(pages.values())).get("pageprops", {}).get("wikibase_item", None)
 
         if not wikidata_id:
-            return url_for('static', filename='default_author_photo.png')  # Fallback image
+            return '/static/default_author_photo.png'  # Fallback image
 
         wikidata_url = f"https://www.wikidata.org/w/api.php"
         wikidata_params = {
@@ -50,14 +51,15 @@ def get_wikipedia_author_image(author_name):
         claims = wikidata_response.get("claims", {}).get("P18", [])
 
         if not claims:
-            return url_for('static', filename='default_author_photo.png')  # Fallback image
+            return '/static/default_author_photo.png'  # Fallback image
 
         image_filename = claims[0]["mainsnak"]["datavalue"]["value"]
         image_url = f"https://commons.wikimedia.org/wiki/Special:FilePath/{image_filename}"
         return image_url
 
     except Exception as e:
-        return url_for('static', filename='default_author_photo.png')  # Fallback image
+        return '/static/default_author_photo.png'  # Fallback image
+
 
 @app.route('/')
 def home():
@@ -72,6 +74,9 @@ def home():
         query = query.order_by(Author.name)
     elif criteria == 'year':
         query = query.order_by(Book.publication_year)
+    elif criteria == 'id':
+        query = query.order_by(Book.id)
+
     books = query.all()
     book_data = [
         {
@@ -82,6 +87,7 @@ def home():
         for book, author in books
     ]
     return render_template('home.html', books=book_data)
+
 
 @app.route('/book/<int:book_id>/detail', methods=['GET'])
 def book_detail(book_id):

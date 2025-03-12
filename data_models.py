@@ -8,7 +8,6 @@ class Author(db.Model):
     name = db.Column(db.String(100), nullable=False)
     birth_date = db.Column(db.Date, nullable=False)
     date_of_death = db.Column(db.Date, nullable=True)
-    olid = db.Column(db.String(10), nullable=True)
 
     def __repr__(self):
         return f"<Author {self.name}>"

@@ -155,7 +155,15 @@ a:hover {
 
 
 .author {
-    color: #666;
+    color: var(--color-secondary);
+    filter: grayscale(100%);
+    transition: filter 0.3s ease-in-out;
+
+}
+
+.author:hover {
+    filter: grayscale(0%);
+
 }
 
 .born {
@@ -282,9 +290,6 @@ a:hover {
     }
 }
 
-.book .book-content {
-    animation: bounce 5s ease-in-out; /* Bounce animation on mouse out */
-}
 
 
 
@@ -403,9 +408,7 @@ label {
 }
 
 .arrow {
-    padding: 50%;
-    aspect-ratio: 1 / 0.5;
-    grid-column: span 0.5;
+
     background-color: var(--secondary-color);
     color: var(--color-secondary);
     display: flex;
@@ -413,6 +416,8 @@ label {
     text-align: center;
     jsutify-content: center;
     font-size: 100px;
+    grid-row-start: 3; /* Start in the third row */
+
 
 }
 
