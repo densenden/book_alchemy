@@ -440,3 +440,26 @@ label {
     padding: 50px;
     max-width: 90%;
 }
+
+/* Mobile layout */
+@media screen and (max-width: 768px) {
+    .book-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    #menu-container {
+        grid-column: 1 / -1;
+    }
+
+    .detail {
+        grid-column: span 2;
+    }
+
+    .detail.large {
+        grid-column: span 2;
+    }
+
+    .arrow {
+        grid-column: span 1;
+    }
+}
