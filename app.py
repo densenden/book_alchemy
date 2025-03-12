@@ -122,16 +122,26 @@ def book_detail(book_id):
         prev_book_id=prev_book_id
     )
 
-@app.route('/author/<int:author_id>/detail', methods=['GET'])
+@app.route('/author/<int:author_id>/detail')
 def author_detail(author_id):
     author = Author.query.get(author_id)
     if not author:
         flash('Author not found.', 'error')
         return redirect('/')
+
     books = Book.query.filter_by(author_id=author_id).all()
     for book in books:
         book.cover_url = f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg"
     author_image = get_wikipedia_author_image(author.name)
+
+    # Get the next author ID
+    next_author = Author.query.filter(Author.id > author_id).order_by(Author.id.asc()).first()
+    next_author_id = next_author.id if next_author else None
+
+    # Get the previous author ID
+    prev_author = Author.query.filter(Author.id < author_id).order_by(Author.id.desc()).first()
+    prev_author_id = prev_author.id if prev_author else None
+
     return render_template(
         'detail_author.html',
         name=author.name,
@@ -140,9 +150,11 @@ def author_detail(author_id):
         date_of_death=author.date_of_death,
         books=books,
         id=author.id,
-        book=books[0] if books else None,
-        author_image=author_image
+        author_image=author_image,
+        next_author_id=next_author_id,
+        prev_author_id=prev_author_id
     )
+
 
 def get_author_summary(name):
     url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{name}"

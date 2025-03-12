@@ -65,8 +65,8 @@
                     </div>
             </div>
             {% endfor %}
-            <div class="arrow book" onclick="location.href='/author/{{ id - 1 }}/detail'"><</div>
-            <div class="arrow book" onclick="location.href='/author/{{ id + 1 }}/detail'">></div>
+                <div class="arrow book" onclick="location.href='/author/{{ prev_author_id }}/detail'" {% if not prev_author_id %}style="visibility: hidden;"{% endif %}><</div>
+                <div class="arrow book" onclick="location.href='/author/{{ next_author_id }}/detail'" {% if not next_author_id %}style="visibility: hidden;"{% endif %}>></div>
             </main>
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 
