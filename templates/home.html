@@ -26,10 +26,18 @@
                     <a href="#" onclick="loadContent('{{ url_for('add_author') }}', 'top')" class="book-button">Add Author</a>
                     <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a>
                     <div class="sort-options">
-                        <a href="/?criteria=title&direction={{ 'desc' if criteria == 'title' and direction == 'asc' else 'asc' }}" class="book-button sort">Title</a>
-                        <a href="/?criteria=author&direction={{ 'desc' if criteria == 'author' and direction == 'asc' else 'asc' }}" class="book-button sort">Author</a>
-                        <a href="/?criteria=year&direction={{ 'desc' if criteria == 'year' and direction == 'asc' else 'asc' }}" class="book-button sort">Year</a>
-                        <a href="/?criteria=id&direction={{ 'desc' if criteria == 'id' and direction == 'asc' else 'asc' }}" class="book-button sort">ID</a>
+                            <a href="/?criteria=title&direction={{ 'desc' if criteria == 'title' and direction == 'asc' else 'asc' }}" class="sort">
+                                Title {{ '↑' if criteria == 'title' and direction == 'asc' else '↓' if criteria == 'title' else '' }}
+                            </a>
+                            <a href="/?criteria=author&direction={{ 'desc' if criteria == 'author' and direction == 'asc' else 'asc' }}" class="sort">
+                                Author {{ '↑' if criteria == 'author' and direction == 'asc' else '↓' if criteria == 'author' else '' }}
+                            </a>
+                            <a href="/?criteria=year&direction={{ 'desc' if criteria == 'year' and direction == 'asc' else 'asc' }}" class="sort">
+                                Year {{ '↑' if criteria == 'year' and direction == 'asc' else '↓' if criteria == 'year' else '' }}
+                            </a>
+                            <a href="/?criteria=id&direction={{ 'desc' if criteria == 'id' and direction == 'asc' else 'asc' }}" class="sort">
+                                ID <br> {{ '↑' if criteria == 'id' and direction == 'asc' else '↓' if criteria == 'id' else '' }}
+                            </a>
                     </div>
                     <form action="/" method="get" class="search-form">
                         <input type="text" name="search" placeholder="Search books..." class="search-books" required>

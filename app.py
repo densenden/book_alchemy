@@ -100,6 +100,15 @@ def book_detail(book_id):
         flash('Book not found.', 'error')
         return redirect('/')
     author = Author.query.get(book.author_id)
+
+    # Get the next book ID
+    next_book = Book.query.filter(Book.id > book_id).order_by(Book.id.asc()).first()
+    next_book_id = next_book.id if next_book else None
+
+    # Get the previous book ID
+    prev_book = Book.query.filter(Book.id < book_id).order_by(Book.id.desc()).first()
+    prev_book_id = prev_book.id if prev_book else None
+
     return render_template(
         'detail_book.html',
         book=book,
@@ -108,7 +117,9 @@ def book_detail(book_id):
         year=book.publication_year,
         isbn=book.isbn,
         birth_date=author.birth_date if author else 'N/A',
-        date_of_death=author.date_of_death if author else 'N/A'
+        date_of_death=author.date_of_death if author else 'N/A',
+        next_book_id=next_book_id,
+        prev_book_id=prev_book_id
     )
 
 @app.route('/author/<int:author_id>/detail', methods=['GET'])

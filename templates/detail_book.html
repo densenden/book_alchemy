@@ -56,8 +56,8 @@
 
 
                 </div>
-            <div class="arrow book" onclick="location.href='/book/{{ book.id - 1 }}/detail'"><</div>
-            <div class="arrow book" onclick="location.href='/book/{{ book.id + 1 }}/detail'">></div>
+            <div class="arrow book" onclick="location.href='/book/{{ prev_book_id }}/detail'" {% if not prev_book_id %}style="visibility: hidden;"{% endif %}><</div>
+            <div class="arrow book" onclick="location.href='/book/{{ next_book_id }}/detail'" {% if not next_book_id %}style="visibility: hidden;"{% endif %}>></div>
         </main>
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 
