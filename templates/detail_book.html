@@ -43,7 +43,7 @@
                             <h2 class="title">{{ book.title }}</h2>
                                 <p class="author"><a href="{{ url_for('author_detail', author_id=book.author_id) }}">{{ book.author }}</a></p>                            <p>ISBN: {{ book.isbn }}</p>
                             <p>Year: {{ book.year }}</p>
-                            <p>book.id: {{ book.id }}</p>
+
                             {% if book.id > 600 %}
                         <form action="/book/{{ book.id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
                                 <input type="hidden" name="_method" value="DELETE">
@@ -55,8 +55,11 @@
 
 
                 </div>
+            <div class="arrow book "><p>Author Page</p><a href="{{ url_for('author_detail', author_id=book.author_id) }}" class="mid">{{ book.author }}</a></div>
             <div class="arrow book" onclick="location.href='/book/{{ book.prev_book_id }}/detail'" {% if not book.prev_book_id %}style="visibility: hidden;"{% endif %}><</div>
             <div class="arrow book" onclick="location.href='/book/{{ book.next_book_id }}/detail'" {% if not book.next_book_id %}style="visibility: hidden;"{% endif %}>></div>
+            <div class="arrow book"><p>book.id</p>{{ book.id }}</div>
+
         </main>
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 

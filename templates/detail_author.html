@@ -10,7 +10,6 @@
 <body>
     <main class="book-grid" id="book-grid">
             <div class="book" id="menu-container">
-
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
                         {% for category, message in messages %}
@@ -25,7 +24,7 @@
                     <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a>
                     <a href="{{ url_for('home') }}" class="book-button">Back to Overview</a>
                     {% if author and author.id > 50 %}
-                        <form action="/author/{{ id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
+                        <form action="/author/{{ author.id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
                             <input type="hidden" name="_method" value="DELETE">
                             <button type="submit" class="delete">Delete Author</button>
                         </form>
@@ -35,41 +34,42 @@
 
             <div class="detail">
                 <div class="book-content">
-                    <img src="{{ author_image }}" alt="Author Image" class="author cover">
+                    <img src="{{ author.author_image }}" alt="Author Image" class="author cover">
                 </div>
             </div>
 
             <div class="detail large">
                 <div class="book-content">
                     <div class="info">
-                        <h1>{{ name }}</h1>
-                        <p class="born">Born: {{ birthdate }}</p>
-                        <p>{{ summary }}</p> </br>
+                        <h1>{{ author.name }}</h1>
+                        <p class="born">Born: {{ author.birthdate }}</p>
+                        <p>{{ author.summary }}</p> </br>
                     </div>
                 </div>
             </div>
-            {% for book in books %}
 
+            {% for book in author.books %}
             <div class="book">
                     <div class="book-content">
                         <a href="/book/{{ book.id }}/detail" class="book-link">
-                        <img src="{{ book.cover_url }}" alt="Cover" class="cover">
+                        <img src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-L.jpg" alt="Cover" class="cover">
                         </a>
                         <div class="info">
                             <h2 class="title">{{ book.title }}</h2>
-                            <p class="author">{{ book.author }}</p>
                             <p>ISBN: {{ book.isbn }}</p>
-                            <p>Year: {{ book.year }}</p>
-                            <p>book.id: {{ book.id }}</p>
+                            <p>Year: {{ book.publication_year }}</p>
+                            <p>ID: {{ book.id }}</p>
                         </div>
                     </div>
             </div>
             {% endfor %}
-                <div class="arrow book" onclick="location.href='/author/{{ prev_author_id }}/detail'" {% if not prev_author_id %}style="visibility: hidden;"{% endif %}><</div>
-                <div class="arrow book" onclick="location.href='/author/{{ next_author_id }}/detail'" {% if not next_author_id %}style="visibility: hidden;"{% endif %}>></div>
-            </main>
+
+
+
+            <div class="arrow book" onclick="location.href='/author/{{ author.prev_author_id }}/detail'" {% if not author.prev_author_id %}style="visibility: hidden;"{% endif %}><</div>
+            <div class="arrow book" onclick="location.href='/author/{{ author.next_author_id }}/detail'" {% if not author.next_author_id %}style="visibility: hidden;"{% endif %}>></div>
+            <div class="arrow book"><p>author.id</p>{{ author.id }}</div>
+    </main>
     <script src="{{ url_for('static', filename='scripts.js') }}"></script>
-
-
 </body>
 </html>

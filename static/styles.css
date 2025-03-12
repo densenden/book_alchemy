@@ -427,3 +427,9 @@ label {
     background-color: var(--color-accent);
     font-weight: bold;
 }
+
+.mid {
+    font-size: 30px;
+    margin-top: 10px;
+    color: var(--color-secondary)
+}
