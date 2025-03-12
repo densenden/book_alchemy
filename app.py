@@ -41,6 +41,7 @@ def get_book_details(book_id):
 
     return book, author, cover_url, book.publication_year, book.isbn, birth_date, date_of_death
 
+
 def get_cover_url(isbn):
     """Generate the cover URL for a book based on its ISBN."""
     return f"https://covers.openlibrary.org/b/isbn/{isbn}-L.jpg"
@@ -61,6 +62,8 @@ def get_author_summary(name):
 
 @app.route('/')
 def home():
+    """Display the home page with a grid of books and a menu container."""
+
     search_query = request.args.get('search', '')
     criteria = request.args.get('criteria', 'title')
 
@@ -95,10 +98,20 @@ def home():
 
     return render_template('home.html', books=book_data)
 
+
 @app.route('/book/<int:book_id>/detail', methods=['GET'])
 def book_detail(book_id):
     book, author, cover_url, year, isbn, birth_date, date_of_death = get_book_details(book_id)
-    return render_template('detail_book.html', book=book, author=author, cover_url=cover_url, year=year, isbn=isbn, birth_date=birth_date, date_of_death=date_of_death)
+    return render_template(
+        'detail_book.html',
+        book=book,
+        author=author,
+        cover_url=cover_url,
+        year=year,
+        isbn=isbn,
+        birth_date=birth_date,
+        date_of_death=date_of_death
+    )
 
 
 @app.route('/author/<int:author_id>/detail', methods=['GET'])
@@ -120,7 +133,15 @@ def author_detail(author_id):
     # Ensure the book variable is included in the context
     book = books[0] if books else None
 
-    return render_template('detail_author.html', name=author.name, summary=summary, birthdate=birthdate, date_of_death=date_of_death, books=books, book=book)
+    return render_template(
+        'detail_author.html',
+        name=author.name,
+        summary=summary,
+        birthdate=birthdate,
+        date_of_death=date_of_death,
+        books=books,
+        book=book
+    )
 
 
 @app.route('/add_author', methods=['GET', 'POST'])

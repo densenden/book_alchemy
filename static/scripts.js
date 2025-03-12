@@ -1,24 +1,24 @@
-document.addEventListener('DOMContentLoaded', function() {
-    function loadContent(url, direction) {
-        fetch(url)
-            .then(response => response.text())
-            .then(html => {
-                const container = document.getElementById('menu-container');
-                container.innerHTML = html;
-                container.classList.add(`slide-in-${direction}`);
-                const backButton = document.createElement('button');
-                backButton.textContent = 'Back';
-                backButton.classList.add('back-button');
-                backButton.onclick = () => {
-                    container.classList.remove(`slide-in-${direction}`);
-                    container.classList.add(`slide-out-${direction}`);
-                    setTimeout(() => location.reload(), 300);
-                };
-                container.appendChild(backButton);
-            })
-            .catch(error => console.warn('Error loading content:', error));
-    }
+function loadContent(url, direction) {
+    fetch(url)
+        .then(response => response.text())
+        .then(html => {
+            const container = document.getElementById('menu-container');
+            container.innerHTML = html;
+            container.classList.add(`slide-in-${direction}`);
+            const backButton = document.createElement('button');
+            backButton.textContent = 'Back';
+            backButton.classList.add('back-button');
+            backButton.onclick = () => {
+                container.classList.remove(`slide-in-${direction}`);
+                container.classList.add(`slide-out-${direction}`);
+                setTimeout(() => location.reload(), 300);
+            };
+            container.appendChild(backButton);
+        })
+        .catch(error => console.warn('Error loading content:', error));
+}
 
+document.addEventListener('DOMContentLoaded', function() {
     const covers = document.querySelectorAll('.cover');
     covers.forEach(cover => {
         cover.onload = () => {

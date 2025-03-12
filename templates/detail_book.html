@@ -9,7 +9,7 @@
 </head>
 <body>
     <main>
-        <div class="book-grid" id="book-grid">
+        <main class="book-grid" id="book-grid">
 
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -25,15 +25,10 @@
                 <nav class="menu">
                     <h1>Studio Sen Library</h1>
                     <a href="#" onclick="loadContent('{{ url_for('add_author') }}', 'top')" class="book-button">Add Author</a>
-                    <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a><a href="https://www.amazon.com/dp/B08N5WRWNW?tag=s" class="book-button">Check out on amazon</a>
+                    <a href="#" onclick="loadContent('{{ url_for('add_book') }}', 'bottom')" class="book-button">Add Book</a>
+                    <a href="https://www.amazon.com/dp/B08N5WRWNW?tag=s" class="book-button">Check out on amazon</a>
                     <a href="{{ url_for('home') }}" class="book-button">Back to Overview</a>
-                    {% if book.id > 50 %}
-                        <form action="/book/{{ book.id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button type="submit" class="delete">Delete Book</button>
-                        </form>
-                    {% endif %}
-                </nav>
+                                    </nav>
             </div>
 
                 <div class="detail large">
@@ -50,43 +45,21 @@
                             <p>ISBN: {{ book.isbn }}</p>
                             <p>Year: {{ book.year }}</p>
                             <p>book.id: {{ book.id }}</p>
+                            {% if book.id > 50 %}
+                        <form action="/book/{{ book.id }}/delete" method="post" class="delete-form" onsubmit="event.stopPropagation();">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="delete">Delete Book</button>
+                        </form>
+                    {% endif %}
                         </div>
                     </div>
+
+
                 </div>
-    <script>
-        function loadContent(url, direction) {
-            fetch(url)
-                .then(response => response.text())
-                .then(html => {
-                    const container = document.getElementById('menu-container');
-                    container.innerHTML = html;
-                    container.classList.add(`slide-in-${direction}`);
-                    const backButton = document.createElement('button');
-                    backButton.textContent = 'Back';
-                    backButton.classList.add('back-button');
-                    backButton.onclick = () => {
-                        container.classList.remove(`slide-in-${direction}`);
-                        container.classList.add(`slide-out-${direction}`);
-                        setTimeout(() => location.reload(), 300);
-                    };
-                    container.appendChild(backButton);
-                })
-                .catch(error => console.warn('Error loading content:', error));
-        }
-    </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const covers = document.querySelectorAll('.cover');
-        covers.forEach(cover => {
-            cover.onload = () => {
-                cover.classList.add('cover-loaded');
-            };
-            // If the image is already cached
-            if (cover.complete) {
-                cover.classList.add('cover-loaded');
-            }
-        });
-    });
-</script>
+            <div class="arrow book" onclick="location.href='/book/{{ book.id - 1 }}/detail'"><</div>
+            <div class="arrow book" onclick="location.href='/book/{{ book.id + 1 }}/detail'">></div>
+        </main>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+
 </body>
 </html>
