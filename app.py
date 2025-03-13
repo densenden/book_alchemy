@@ -11,6 +11,14 @@ app.secret_key = os.urandom(24)
 db.init_app(app)  # Initialize the db instance with the app
 
 
+def get_open_library_cover(isbn):
+    url = f"https://covers.openlibrary.org/b/isbn/{isbn}-L.jpg"
+    response = requests.get(url)
+    if response.status_code == 200 and int(response.headers.get('Content-Length', 0)) > 1000:
+        return url
+    return '/static/default_book_cover.png'
+
+
 def get_wikipedia_author_image(author_name):
     try:
         search_url = f"https://en.wikipedia.org/w/api.php"
@@ -62,6 +70,15 @@ def get_wikipedia_author_image(author_name):
         return '/static/default_author_photo.png'  # Fallback image
 
 
+def get_author_summary(author_name):
+    url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{author_name}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        return data.get('extract', 'No summary available.')
+    return 'No summary available.'
+
+
 @app.route('/')
 def home():
     search_query = request.args.get('search', '')
@@ -85,9 +102,13 @@ def home():
     books = query.all()
     book_data = [
         {
-            'id': book.id, 'title': book.title, 'isbn': book.isbn, 'year': book.publication_year,
-            'author': author.name, 'birth_date': author.birth_date, 'date_of_death': author.date_of_death,
-            'cover_url': f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg"
+            'id': book.id, 'title': book.title,
+            'isbn': book.isbn,
+            'year': book.publication_year,
+            'author': author.name,
+            'birth_date': author.birth_date,
+            'date_of_death': author.date_of_death,
+            'cover_url': get_open_library_cover(book.isbn)
         }
         for book, author in books
     ]
@@ -120,7 +141,7 @@ def book_detail(book_id):
         'author_id': author.id if author else None,
         'birth_date': author.birth_date if author else 'N/A',
         'date_of_death': author.date_of_death if author else 'N/A',
-        'cover_url': f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg",
+        'cover_url': get_open_library_cover(book.isbn),
         'next_book_id': next_book_id,
         'prev_book_id': prev_book_id
     }
@@ -166,14 +187,6 @@ def author_detail(author_id):
     return render_template(
         'detail_author.html', author=author_data)
 
-
-def get_author_summary(name):
-    url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{name}"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        return data.get('extract', 'No summary available.')
-    return 'No summary available.'
 
 
 @app.route('/add_author', methods=['GET', 'POST'])
