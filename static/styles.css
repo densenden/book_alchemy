@@ -418,7 +418,7 @@ label {
     display: flex;
     cursor: pointer;
     text-align: center;
-    jsutify-content: center;
+    justify-content: center;
     font-size: 100px;
     grid-row-start: 3; /* Start in the third row */
 
