@@ -63,18 +63,6 @@ def get_wikipedia_author_image(author_name):
         return '/static/default_author_photo.png'  # Fallback image
 
 
-def get_asin_from_amazon(title):
-    search_url = f"https://www.amazon.com/s?k={title.replace(' ', '+')}"
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
-    response = requests.get(search_url, headers=headers)
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, 'html.parser')
-        if first_result:
-            return first_result['data-asin']
-    return None
-
-
 @app.route('/')
 def home():
     search_query = request.args.get('search', '')
@@ -123,8 +111,6 @@ def book_detail(book_id):
     prev_book = Book.query.filter(Book.id < book_id).order_by(Book.id.desc()).first()
     prev_book_id = prev_book.id if prev_book else None
 
-    # Get the ASIN from Amazon
-    asin = get_asin_from_amazon(book.title)
 
     book_data = {
         'id': book.id,
@@ -137,8 +123,7 @@ def book_detail(book_id):
         'date_of_death': author.date_of_death if author else 'N/A',
         'cover_url': f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg",
         'next_book_id': next_book_id,
-        'prev_book_id': prev_book_id,
-        'asin': asin
+        'prev_book_id': prev_book_id
     }
 
     return render_template('detail_book.html', book=book_data)
