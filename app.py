@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, flash, redirect, jsonify
 from datetime import datetime
 import requests
 from data_models import db, Book, Author
-from bs4 import BeautifulSoup
 
 
 app = Flask(__name__)
