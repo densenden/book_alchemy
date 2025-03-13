@@ -105,6 +105,10 @@ def home():
         query = query.order_by(Book.id.asc() if direction == 'asc' else Book.id.desc())
 
     books = query.all()
+
+    if not books:
+        flash('No books found for your query.', 'error')
+
     book_data = [
         {
             'id': book.id, 'title': book.title,
@@ -192,7 +196,6 @@ def author_detail(author_id):
     }
 
     return render_template('detail_author.html', author=author_data)
-
 
 
 @app.route('/add_author', methods=['GET', 'POST'])
