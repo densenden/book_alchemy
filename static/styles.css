@@ -225,7 +225,7 @@ a:hover {
 
 .book-content {
     transition: transform 0.3s ease-in-out, max-height 0.3s ease-in-out;
-
+    width: 90%;
 }
 
 .cover {
@@ -273,6 +273,7 @@ a:hover {
     text-align: left;
     min-height: 150px; /* Initial height */
     overflow: hidden;
+    width: 90%;
 }
 
 
@@ -433,7 +434,8 @@ label {
 .mid {
     font-size: 30px;
     margin-top: 10px;
-    color: var(--color-secondary)
+    color: var(--color-secondary);
+    max-width: 90%;
 }
 
 .summary {

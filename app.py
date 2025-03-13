@@ -1,8 +1,9 @@
 import os
-from flask import Flask, render_template, request, flash, redirect, jsonify
+from flask import Flask, render_template, request, flash, redirect
 from datetime import datetime
 import requests
 from data_models import db, Book, Author
+
 
 
 app = Flask(__name__)
@@ -12,14 +13,16 @@ db.init_app(app)  # Initialize the db instance with the app
 
 
 def get_open_library_cover(isbn):
+    """Get the cover image of the book from Open Library."""
     url = f"https://covers.openlibrary.org/b/isbn/{isbn}-L.jpg"
-    response = requests.get(url)
-    if response.status_code == 200 and int(response.headers.get('Content-Length', 0)) > 1000:
-        return url
-    return '/static/default_book_cover.png'
+    # response = requests.get(url)
+    # if response.status_code == 200:
+    return url
+    # return '/static/default_book_cover.png'
 
 
 def get_wikipedia_author_image(author_name):
+    """Get the image of the author from Wikipedia."""
     try:
         search_url = f"https://en.wikipedia.org/w/api.php"
         search_params = {
@@ -71,6 +74,7 @@ def get_wikipedia_author_image(author_name):
 
 
 def get_author_summary(author_name):
+    """Get the summary of the author from Wikipedia."""
     url = f"https://en.wikipedia.org/api/rest_v1/page/summary/{author_name}"
     response = requests.get(url)
     if response.status_code == 200:
@@ -81,6 +85,7 @@ def get_author_summary(author_name):
 
 @app.route('/')
 def home():
+    """Serves data for books overview page."""
     search_query = request.args.get('search', '')
     criteria = request.args.get('criteria', 'title')
     direction = request.args.get('direction', 'asc')
@@ -117,6 +122,7 @@ def home():
 
 @app.route('/book/<int:book_id>/detail', methods=['GET'])
 def book_detail(book_id):
+    """Serves data for book detail page."""
     book = Book.query.get(book_id)
     if not book:
         flash('Book not found.', 'error')
@@ -151,14 +157,17 @@ def book_detail(book_id):
 
 @app.route('/author/<int:author_id>/detail')
 def author_detail(author_id):
+    """Serves data for author detail page."""
     author = Author.query.get(author_id)
     if not author:
         flash('Author not found.', 'error')
         return redirect('/')
 
     books = Book.query.filter_by(author_id=author_id).all()
+
     for book in books:
         book.cover_url = f"https://covers.openlibrary.org/b/isbn/{book.isbn}-L.jpg"
+
     author_image = get_wikipedia_author_image(author.name)
 
     # Get the next author ID
@@ -183,9 +192,6 @@ def author_detail(author_id):
     }
 
     return render_template('detail_author.html', author=author_data)
-
-    return render_template(
-        'detail_author.html', author=author_data)
 
 
 
@@ -274,4 +280,4 @@ def delete_author(author_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, host='127.0.0.1', port=5000)
